@@ -12,7 +12,11 @@ module.exports = (sequelize, DataTypes) => {
       Product.belongsToMany(models.Cart, {
         through: 'prouct_to_carts',
         foreignKey: 'cartId'
-      })
+      });
+
+      Product.hasOne(models.Review, {
+        foreignKey: "productId",
+      });
     }
   }
   Product.init(
