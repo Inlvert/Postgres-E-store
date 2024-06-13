@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Product extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,53 +9,43 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasOne(models.Cart, {
-        foreignKey: "userId",
-      });
+      Product.belongsToMany(models.Cart, {
+        through: 'prouct_to_carts',
+        foreignKey: 'cartId'
+      })
     }
   }
-  User.init(
+  Product.init(
     {
-      firstName: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
-        field: "first_name",
       },
-      lastName: {
+      category: {
         type: DataTypes.STRING,
+      },
+      description: {
+        type: DataTypes.STRING,
+        defaultValue: "Lorem ipsum dolor sit amet",
+      },
+      manufacturer: {
+        type: DataTypes.STRING,
+      },
+      price: {
+        type: DataTypes.NUMERIC,
         allowNull: false,
-        field: "last_name",
       },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: DataTypes.STRING,
-      },
-      role: {
-        type: DataTypes.STRING,
-      },
-      isMale: {
-        type: DataTypes.BOOLEAN,
-        field: "is_male",
-      },
-      birthday: {
-        type: DataTypes.DATEONLY,
-      },
-      bonusAmount: {
-        type: DataTypes.DECIMAL,
-        field: "bonus_amount",
+      quantity: {
+        type: DataTypes.NUMERIC,
         defaultValue: 10,
       },
     },
     {
       sequelize,
-      modelName: "User",
-      tableName: "users",
+      modelName: "Product",
+      tableName: "products",
       underscored: true,
     }
   );
-  return User;
+  return Product;
 };
