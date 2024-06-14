@@ -1,9 +1,17 @@
-const userRouter = require('express').Router();
-const userController = require('../controllers/user.controller')
+const userRouter = require("express").Router();
+const userController = require("../controllers/user.controller");
+const { findUser } = require("../middlewares/findUser.mw");
 
-userRouter.route('/').post(userController.createUser).get(userController.findUsers);
+userRouter
+  .route("/")
+  .post(userController.createUser)
+  .get(userController.findUsers);
 
-userRouter.route('/:userId').get(userController.findUser);
+userRouter
+  .route("/:userId")
+  .get(userController.findUser)
+  .put(findUser, userController.updateUser)
+  .delete(findUser, userController.deleteUser);
 
 // userRouter.route('/:email').get(userController.getUser);
 
