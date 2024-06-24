@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../../components/Header";
 import ProductForm from "../../components/ProductForm";
+import ProductList from "../../components/ProductList";
 
 const HomePage = () => {
   return (
@@ -10,6 +11,7 @@ const HomePage = () => {
       </div>
       <Header />
       <ProductForm/>
+      <ProductList/>
     </div>
   );
 };
