@@ -9,3 +9,8 @@ export const createProduct = async (productData) => {
   const response = await httpClient.post("/products", productData);
   return response;
 };
+
+export const getProducts = async (productData) => {
+  const response = await httpClient.get("/products", productData);
+  return response;
+};
