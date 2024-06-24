@@ -6,7 +6,7 @@ const { findProduct } = require("../middlewares/findProduct.mw");
 productRouter
   .route("/")
   .post(productController.createProduct)
-  .get(productController.gerProducts);
+  .get(productController.getProducts);
 
 productRouter
   .route("/:productId/carts/:cartId")

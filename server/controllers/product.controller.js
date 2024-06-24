@@ -12,17 +12,17 @@ module.exports.createProduct = async (req, res, next) => {
   }
 };
 
-module.exports.gerProducts = async (req, res, next) => {
+module.exports.getProducts = async (req, res, next) => {
   try {
     const { product } = req;
 
-    const addProduct = await Product.findAll({
+    const products = await Product.findAll({
       include: {
         model: Cart,
       },
     });
 
-    res.send({ data: addProduct });
+    res.send({ data: products });
   } catch (error) {
     next(error);
   }
