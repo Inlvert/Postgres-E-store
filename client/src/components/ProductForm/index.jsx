@@ -3,7 +3,7 @@ import { Formik, Field, Form } from "formik";
 import * as yup from "yup";
 import "./style.css";
 import { createProduct } from "../../redux/slice/productSlice";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const PRODUCT_SCHEMA = yup.object({
   name: yup.string().required(),
@@ -23,7 +23,15 @@ const initialValues = {
   quantity: 1,
 };
 
-const ProductForm = ({ createProductRequest }) => {
+const ProductForm = (props) => {
+
+  const dispatch = useDispatch()
+
+  const createProductRequest = (productData) => {
+    dispatch(createProduct(productData))
+  }
+
+
   const handleSubmit = (values, formikBag) => {
     const productData = {
       ...values,
@@ -65,8 +73,4 @@ const ProductForm = ({ createProductRequest }) => {
   );
 };
 
-const mDtP = (dispatch) => ({
-  createProductRequest: (productData) => dispatch(createProduct(productData)),
-});
-
-export default connect(null, mDtP)(ProductForm);
+export default ProductForm;
