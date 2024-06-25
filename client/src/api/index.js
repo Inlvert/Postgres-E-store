@@ -10,7 +10,7 @@ export const createProduct = async (productData) => {
   return response;
 };
 
-export const getProducts = async (productData) => {
-  const response = await httpClient.get("/products", productData);
+export const getProducts = async (page) => {
+  const response = await httpClient.get(`/products?page=${page}&results=5`);
   return response;
 };

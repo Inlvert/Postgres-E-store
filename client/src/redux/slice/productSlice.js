@@ -4,9 +4,10 @@ import * as API from "../../api";
 const SLICE_NAME = "products";
 
 const initialState = {
-  product: [],
+  products: [],
   isLoading: false,
   error: null,
+  page: 1
 };
 
 const createProduct = createAsyncThunk(
@@ -30,13 +31,15 @@ const createProduct = createAsyncThunk(
 
 const getProducts = createAsyncThunk(
   `${SLICE_NAME}/get`,
-  async (productData, thunkAPI) => {
+  async (page, thunkAPI) => {
     try {
-      const response = await API.getProducts(productData);
+      const response = await API.getProducts(page);
 
       const {
         data: { data: products },
       } = response;
+
+      console.log(response)
 
       return products;
     } catch (error) {
@@ -48,6 +51,14 @@ const getProducts = createAsyncThunk(
 const productSlice = createSlice({
   name: SLICE_NAME,
   initialState,
+  reducers: {
+    nextPage: (state, action) => {
+      state.page += 1
+    },
+    prevPage: (state, action) => {
+      state.page -= 1
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(createProduct.pending, (state) => {
       state.isLoading = true;
@@ -75,6 +86,8 @@ const productSlice = createSlice({
 });
 
 const { reducer: productsReducer, actions } = productSlice;
+
+export const {nextPage, prevPage} = actions;
 
 export { createProduct, getProducts };
 

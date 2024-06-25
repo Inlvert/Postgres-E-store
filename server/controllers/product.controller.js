@@ -14,9 +14,12 @@ module.exports.createProduct = async (req, res, next) => {
 
 module.exports.getProducts = async (req, res, next) => {
   try {
-    const { product } = req;
+    const { pagination: {limit, offset} } = req;
 
     const products = await Product.findAll({
+      limit,
+      offset,
+      order: [['price', 'ASC']],
       include: {
         model: Cart,
       },
