@@ -8,15 +8,16 @@ const createHttpError = require("http-errors");
 
 module.exports.createUser = async (req, res, next) => {
   try {
-    const { body } = req;
+    const { body, file } = req;
 
-    const user = await User.create(body);
+    const user = await User.create({...body, image: file.filename});
 
     await user.createCart();
 
     console.log(user);
 
     res.status(201).send({ data: user });
+    
   } catch (error) {
     next(error);
   }

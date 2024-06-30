@@ -42,6 +42,9 @@ module.exports = {
         field: 'bonus_amount',
         defaultValue: 10
       },
+      image: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
