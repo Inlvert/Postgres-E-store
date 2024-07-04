@@ -5,10 +5,10 @@
       "server": "localhost",
       "port": 5432,
       "driver": "PostgreSQL",
-      "name": "store_pern",
       "database": "store_pern",
       "username": "postgres",
-      "password": "postgres"
+      "password": "postgres",
+      "name": "store_pern"
     }
   ]
 }

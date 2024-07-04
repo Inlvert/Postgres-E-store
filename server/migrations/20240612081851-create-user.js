@@ -42,7 +42,7 @@ module.exports = {
         field: 'bonus_amount',
         defaultValue: 10
       },
-      image: {
+      avatar: {
         type: Sequelize.STRING,
       },
       createdAt: {

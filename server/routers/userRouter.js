@@ -8,13 +8,13 @@ const { imageUpload } = require("../utils/imageUpload");
 
 userRouter
   .route("/")
-  .post(imageUpload.single("image"), userController.createUser)
+  .post(imageUpload.single("avatar"), userController.createUser)
   .get(userController.findUsers);
 
 userRouter
   .route("/:userId")
   .get(userController.findUser)
-  .put(imageUpload.single("image"), findUser, userController.updateUser)
+  .put(imageUpload.single("avatar"), findUser, userController.updateUser)
   .delete(findUser, userController.deleteUser);
 
 // userRouter.route('/:email').get(userController.getUser);

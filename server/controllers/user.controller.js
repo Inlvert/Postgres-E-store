@@ -10,7 +10,7 @@ module.exports.createUser = async (req, res, next) => {
   try {
     const { body, file } = req;
 
-    const user = await User.create({...body, image: file.filename});
+    const user = await User.create({...body, avatar: file.filename});
 
     await user.createCart();
 

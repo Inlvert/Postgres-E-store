@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
         field: "bonus_amount",
         defaultValue: 10,
       },
-      image: {
+      avatar: {
         type: DataTypes.STRING,
       },
     },
