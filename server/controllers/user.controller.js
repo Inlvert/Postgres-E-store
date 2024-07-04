@@ -16,7 +16,7 @@ module.exports.createUser = async (req, res, next) => {
 
     console.log(user);
 
-    res.status(201).send({ data: user });
+    res.status(201).send({ body, file  });
     
   } catch (error) {
     next(error);

@@ -14,3 +14,9 @@ export const getProducts = async (page) => {
   const response = await httpClient.get(`/products?page=${page}&results=5`);
   return response;
 };
+
+
+export const createUser = async (userData) => {
+  const response = await httpClient.post("/users", userData);
+  return response;
+};
