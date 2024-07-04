@@ -12,6 +12,9 @@ const Header = (props) => {
         <li>
           <Link to='/cart'>Cart</Link>
         </li>
+        <li>
+          <Link to='/user'>User</Link>
+        </li>
       </ul>
     </nav>
   </header>
