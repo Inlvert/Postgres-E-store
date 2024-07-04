@@ -2,6 +2,7 @@ const userRouter = require("express").Router();
 const userController = require("../controllers/user.controller");
 const { findUser } = require("../middlewares/findUser.mw");
 const { imageUpload } = require("../utils/imageUpload");
+const { paginate } = require("../middlewares/common.mw");
 
 
 // const upload = multer({ dest: 'uploads/' })
@@ -9,7 +10,7 @@ const { imageUpload } = require("../utils/imageUpload");
 userRouter
   .route("/")
   .post(imageUpload.single("avatar"), userController.createUser)
-  .get(userController.findUsers);
+  .get(paginate, userController.findUsers);
 
 userRouter
   .route("/:userId")
