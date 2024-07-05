@@ -36,12 +36,12 @@ const getProducts = createAsyncThunk(
       const response = await API.getProducts(page);
 
       const {
-        data: { data: products },
+        data: { data: product },
       } = response;
 
       console.log(response)
 
-      return products;
+      return product;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.data.errors);
     }
@@ -65,7 +65,7 @@ const productSlice = createSlice({
     });
     builder.addCase(createProduct.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.product.push(action.payload);
+      state.products.push(action.payload);
     });
     builder.addCase(createProduct.rejected, (state, action) => {
       state.isLoading = true;

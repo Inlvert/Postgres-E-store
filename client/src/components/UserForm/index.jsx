@@ -7,25 +7,25 @@ const UserForm = () => {
   const { isLoading, error } = useSelector((state) => state.user.users);
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    role: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    role: "",
     isMale: false,
-    birthday: '',
+    birthday: "",
     bonusAmount: 10,
     avatar: null,
   });
 
   const initialFormState = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    role: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    role: "",
     isMale: false,
-    birthday: '',
+    birthday: "",
     bonusAmount: 10,
     avatar: null,
   };
@@ -38,7 +38,7 @@ const UserForm = () => {
     const { name, value, type, checked } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -52,7 +52,7 @@ const UserForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(e)
+    console.log(e);
 
     const formDataToSend = new FormData();
     for (const key in formData) {
@@ -61,11 +61,24 @@ const UserForm = () => {
 
     dispatch(createUser(formDataToSend));
 
+    console.log(formDataToSend);
+
     resetForm();
   };
 
   return (
-    <form onSubmit={handleSubmit} encType="multipart/form-data">
+    <form
+      onSubmit={handleSubmit}
+      encType="multipart/form-data"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-end",
+        maxWidth: "400px",
+        padding: "20px",
+        border: "solid"
+      }}
+    >
       <div>
         <label htmlFor="firstName">First Name:</label>
         <input
