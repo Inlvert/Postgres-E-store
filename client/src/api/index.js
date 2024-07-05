@@ -20,3 +20,8 @@ export const createUser = async (userData) => {
   const response = await httpClient.post("/users", userData);
   return response;
 };
+
+export const getUsers = async (page) => {
+  const response = await httpClient.get(`/users?page=${page}&results=5`);
+  return response;
+};
