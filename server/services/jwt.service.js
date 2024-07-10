@@ -4,7 +4,7 @@ const { promisify } = require("util");
 const jwtSign = promisify(jwt.sign);
 const jwtVerify = promisify(jwt.verify);
 
-const tokenCongig = {
+const tokenConfig = {
   access: {
     secret: "sfbdfuiodoklsdv84546dvfv",
     expiresIn: "1min" 
@@ -21,10 +21,10 @@ const verifyToken = (token, {secret}) => jwtVerify(token, secret);
 
 module.exports.createTokenPair = async (payload) => {
   return {
-    accessToken: await createToken(payload, tokenCongig.access),
-    refreshToken: await createToken(payload, tokenCongig.refresh)
+    accessToken: await createToken(payload, tokenConfig.access),
+    refreshToken: await createToken(payload, tokenConfig.refresh)
   }
 }
 
-module.exports.verifyAccessToken = token => verifyToken(token, tokenCongig.access);
-module.exports.verifyRefreshToken = token => verifyToken(token, tokenCongig.refresh);
+module.exports.verifyAccessToken = token => verifyToken(token, tokenConfig.access);
+module.exports.verifyRefreshToken = token => verifyToken(token, tokenConfig.refresh);
