@@ -5,6 +5,60 @@ const httpClient = axios.create({
   baseURL: CONSTANTS.HTTP_SERVER_URL,
 });
 
+let accessToken = null;
+
+// Add a request interceptor
+httpClient.interceptors.request.use(
+  function (config) {
+
+    if(accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`
+    }
+    // Do something before request is sent
+    return config;
+  },
+  function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  }
+);
+
+// Add a response interceptor
+httpClient.interceptors.response.use(
+  function (response) {
+    if (response?.data?.data?.tokenPair) {
+      const { tokenPair } = response.data.data;
+
+      accessToken = tokenPair.accessToken;
+
+      localStorage.setItem('refreshToken', tokenPair.refreshToken)
+    }
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
+    return response;
+  },
+  async function (error) {
+    
+    const { response: { staus } } = error;
+    const refreshTokenFronLS = localStorage.getItem('refreshToken');
+
+    if (refreshTokenFronLS && staus === 419) {
+      const {data: {data: {tokenPair}}} = await axios.post(`${CONSTANTS.HTTP_SERVER_URL}/auth/refresh`, {refreshToken: refreshTokenFronLS})
+
+      accessToken = tokenPair.accessToken;
+
+      localStorage.setItem('refreshToken', tokenPair.refreshToken)
+
+      error.config.headers['Authorization'] = `Bearer ${accessToken}`
+
+      return httpClient.request(error.config)
+
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 export const createProduct = async (productData) => {
   const response = await httpClient.post("/products", productData);
   return response;
