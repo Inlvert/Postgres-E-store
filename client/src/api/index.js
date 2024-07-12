@@ -31,7 +31,7 @@ httpClient.interceptors.response.use(
 
       accessToken = tokenPair.accessToken;
 
-      localStorage.setItem('refreshToken', tokenPair.refreshToken)
+      localStorage.setItem(CONSTANTS.REFRESH_TOKEN, tokenPair.refreshToken)
     }
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
@@ -40,14 +40,14 @@ httpClient.interceptors.response.use(
   async function (error) {
     
     const { response: { staus } } = error;
-    const refreshTokenFronLS = localStorage.getItem('refreshToken');
+    const refreshTokenFronLS = localStorage.getItem(CONSTANTS.REFRESH_TOKEN);
 
     if (refreshTokenFronLS && staus === 419) {
       const {data: {data: {tokenPair}}} = await axios.post(`${CONSTANTS.HTTP_SERVER_URL}/auth/refresh`, {refreshToken: refreshTokenFronLS})
 
       accessToken = tokenPair.accessToken;
 
-      localStorage.setItem('refreshToken', tokenPair.refreshToken)
+      localStorage.setItem(CONSTANTS.REFRESH_TOKEN, tokenPair.refreshToken)
 
       error.config.headers['Authorization'] = `Bearer ${accessToken}`
 
