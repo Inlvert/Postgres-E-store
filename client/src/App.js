@@ -4,8 +4,22 @@ import HomePage from "./pages/Home";
 import CartPage from "./pages/Cart";
 import UserPage from "./pages/User";
 import LoginPage from "./pages/Login";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import CONSTANTS from "./constants";
+import { refresh } from "./redux/slice/authSlice";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const refreshTokenFromLs = localStorage.getItem(CONSTANTS.REFRESH_TOKEN);
+
+    if (refreshTokenFromLs) {
+      dispatch(refresh(refreshTokenFromLs));
+    }
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
