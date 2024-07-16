@@ -35,7 +35,7 @@ const refresh = createAsyncThunk(
       return thunkAPI.rejectWithValue(error.response.data.data.errors);
     }
   }
-)
+);
 
 const initialState = {
   user: null,
@@ -46,6 +46,11 @@ const initialState = {
 const authSlise = createSlice({
   name: SLICE_NAME,
   initialState,
+  reducers: {
+    logout: (state) => {
+      return initialState;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(login.pending, (state) => {
       state.isLoading = true;
@@ -74,6 +79,8 @@ const authSlise = createSlice({
 
 const { reducer: authReducer, actions } = authSlise;
 
-export { login, refresh};
+export const { logout } = actions;
+
+export { login, refresh };
 
 export default authReducer;
