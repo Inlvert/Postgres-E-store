@@ -1,8 +1,8 @@
-const { Product, Cart } = require("../models");
+const { Product, Cart, Product_to_cart} = require("../models");
 
 module.exports.createProduct = async (req, res, next) => {
   try {
-    const { body } = req;
+    const { cart, body } = req;
 
     const product = await Product.create(body);
 
@@ -14,12 +14,14 @@ module.exports.createProduct = async (req, res, next) => {
 
 module.exports.getProducts = async (req, res, next) => {
   try {
-    const { pagination: {limit, offset} } = req;
+    const {
+      pagination: { limit, offset },
+    } = req;
 
     const products = await Product.findAll({
       limit,
       offset,
-      order: [['price', 'ASC']],
+      order: [["price", "ASC"]],
       include: {
         model: Cart,
       },
@@ -33,11 +35,35 @@ module.exports.getProducts = async (req, res, next) => {
 
 module.exports.addProductToCart = async (req, res, next) => {
   try {
-    const { body, product, cart } = req;
+    const { productId } = req.params;
+    const { cartId, quantity } = req.body; // Assuming cartId and quantity are sent in the body
 
-    const foundProduct = await product.addCart(cart, body);
+    // Find the product
+    const product = await Product.findByPk(productId);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
 
-    res.send({ data: foundProduct });
+    // Find or create the cart
+    let cart = await Cart.findByPk(cartId);
+    if (!cart) {
+      cart = await Cart.create({ userId: req.user.id }); // Assuming you have user info in req.user
+    }
+
+    // Find or create the Product_to_cart entry
+    const [cartProduct, created] = await Product_to_cart.findOrCreate({
+      where: { cartId: cart.id, productId: product.id },
+      defaults: { quantity: quantity || 1 },
+    });
+
+    if (!created) {
+      // If the product is already in the cart, update the quantity
+      cartProduct.quantity += quantity || 1;
+      await cartProduct.save();
+    }
+
+    res.status(200).json({ message: 'Product added to cart', cartProduct });
+
   } catch (error) {
     next(error);
   }

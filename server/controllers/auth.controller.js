@@ -1,6 +1,28 @@
 const createHttpError = require("http-errors");
-const { User } = require("../models");
+const { User, Cart} = require("../models");
 const AuthService = require("../services/auth.service");
+const { where } = require("sequelize");
+
+// module.exports.registration = async (req, res, next) => {
+//   try {
+//     const { body, file } = req;
+
+//     const user = await User.create({ ...body, avatar: file.filename });
+
+//     await user.createCart();
+
+//     const userWithTokens = await AuthService.createSession(user);
+
+//     console.log(user);
+
+//     // send on front
+//     res.status(201).send({
+//       data: userWithTokens,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 module.exports.registration = async (req, res, next) => {
   try {
@@ -8,13 +30,24 @@ module.exports.registration = async (req, res, next) => {
 
     const user = await User.create({ ...body, avatar: file.filename });
 
+    const cart = await Cart.create({ userId: user.id });
+
+    const cartId = cart.id;
+
+    await User.update({
+      cartId: cartId,
+    }, {
+      where: { id: user.id },
+    });
+
     const userWithTokens = await AuthService.createSession(user);
 
-    console.log(user);
+
+    console.log(userWithTokens);
 
     // send on front
     res.status(201).send({
-      data: userWithTokens,
+      data: { ...userWithTokens, cartId },
     });
   } catch (error) {
     next(error);

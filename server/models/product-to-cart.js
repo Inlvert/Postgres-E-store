@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Prouct_to_cart extends Model {
+  class Product_to_cart extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,12 +9,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Prouct_to_cart.belongsTo(models.Cart, {
+      Product_to_cart.belongsTo(models.Cart, {
         foreignKey: "cartId",
-      })
+      });
+      Product_to_cart.belongsTo(models.Product, {
+        foreignKey: "productId",
+      });
     }
   }
-  Prouct_to_cart.init(
+  Product_to_cart.init(
     {
       productId: {
         type: DataTypes.INTEGER,
@@ -33,10 +36,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Prouct_to_cart",
-      tableName: "prouct_to_carts",
+      modelName: "Product_to_cart",
+      tableName: "product_to_cart",
       underscored: true,
     }
   );
-  return Prouct_to_cart;
+  return Product_to_cart;
 };

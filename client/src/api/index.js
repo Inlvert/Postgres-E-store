@@ -10,14 +10,13 @@ let accessToken = null;
 export const clearTokens = () => {
   accessToken = null;
   localStorage.removeItem(CONSTANTS.REFRESH_TOKEN);
-}
+};
 
 // Add a request interceptor
 httpClient.interceptors.request.use(
   function (config) {
-
-    if(accessToken) {
-      config.headers['Authorization'] = `Bearer ${accessToken}`
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
     // Do something before request is sent
     return config;
@@ -36,28 +35,34 @@ httpClient.interceptors.response.use(
 
       accessToken = tokenPair.accessToken;
 
-      localStorage.setItem(CONSTANTS.REFRESH_TOKEN, tokenPair.refreshToken)
+      localStorage.setItem(CONSTANTS.REFRESH_TOKEN, tokenPair.refreshToken);
     }
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     return response;
   },
   async function (error) {
-    
-    const { response: { staus } } = error;
+    const {
+      response: { staus },
+    } = error;
     const refreshTokenFronLS = localStorage.getItem(CONSTANTS.REFRESH_TOKEN);
 
     if (refreshTokenFronLS && staus === 419) {
-      const {data: {data: {tokenPair}}} = await axios.post(`${CONSTANTS.HTTP_SERVER_URL}/auth/refresh`, {refreshToken: refreshTokenFronLS})
+      const {
+        data: {
+          data: { tokenPair },
+        },
+      } = await axios.post(`${CONSTANTS.HTTP_SERVER_URL}/auth/refresh`, {
+        refreshToken: refreshTokenFronLS,
+      });
 
       accessToken = tokenPair.accessToken;
 
-      localStorage.setItem(CONSTANTS.REFRESH_TOKEN, tokenPair.refreshToken)
+      localStorage.setItem(CONSTANTS.REFRESH_TOKEN, tokenPair.refreshToken);
 
-      error.config.headers['Authorization'] = `Bearer ${accessToken}`
+      error.config.headers["Authorization"] = `Bearer ${accessToken}`;
 
-      return httpClient.request(error.config)
-
+      return httpClient.request(error.config);
     }
 
     return Promise.reject(error);
@@ -71,6 +76,16 @@ export const createProduct = async (productData) => {
 
 export const getProducts = async (page) => {
   const response = await httpClient.get(`/products?page=${page}&results=5`);
+  return response;
+};
+
+export const addProductToCart = async ({ productId, cartId }) => {
+  const response = await httpClient.post(`/auth/login/carts/${cartId}/products/${productId}`);
+  return response;
+};
+
+export const deleteProduct = async (productId) => {
+  const response = await httpClient.delete(`products/${productId}`);
   return response;
 };
 

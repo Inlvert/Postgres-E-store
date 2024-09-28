@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as API from "../../api";
+import { setCartId } from "../slice/cartSlice";
 
 const SLICE_NAME = "auth";
 
@@ -9,9 +10,13 @@ const login = createAsyncThunk(
     try {
       const {
         data: {
-          data: { user },
+          data: { user, cartId },
         },
       } = await API.login(userData);
+
+      console.log(cartId);
+
+      thunkAPI.dispatch(setCartId(cartId));
 
       return user;
     } catch (error) {
@@ -26,9 +31,31 @@ const refresh = createAsyncThunk(
     try {
       const {
         data: {
-          data: { user },
+          data: { user, cartId },
         },
       } = await API.refresh(refreshToken);
+
+      thunkAPI.dispatch(setCartId(cartId));
+
+      return user;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.data.errors);
+    }
+  }
+);
+
+const registration = createAsyncThunk(
+  `${SLICE_NAME}/registration`,
+  async (userData, thunkAPI) => {
+    try {
+      const {
+        data: {
+          data: { user, cartId },
+        },
+      } = await API.registration(userData);
+
+      thunkAPI.dispatch(setCartId(cartId));
+
 
       return user;
     } catch (error) {
@@ -52,11 +79,24 @@ const authSlise = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(registration.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(registration.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.user = action.payload;
+    });
+
+    builder.addCase(registration.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    });
     builder.addCase(login.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(login.fulfilled, (state, action) => {
-      state.isLoading = true;
+      state.isLoading = false;
       state.user = action.payload;
     });
     builder.addCase(login.rejected, (state, action) => {
@@ -67,11 +107,11 @@ const authSlise = createSlice({
       state.isLoading = true;
     });
     builder.addCase(refresh.fulfilled, (state, action) => {
-      state.isLoading = true;
+      state.isLoading = false;
       state.user = action.payload;
     });
     builder.addCase(refresh.rejected, (state, action) => {
-      state.isLoading = true;
+      state.isLoading = false;
       state.error = action.payload;
     });
   },
@@ -81,6 +121,6 @@ const { reducer: authReducer, actions } = authSlise;
 
 export const { logout } = actions;
 
-export { login, refresh };
+export { login, refresh, registration };
 
 export default authReducer;

@@ -119,6 +119,8 @@ module.exports.deleteUser = async (req, res, next) => {
 
     await user.destroy();
 
+    console.log(user);
+
     res.send({ data: user });
   } catch (error) {
     next(error);
